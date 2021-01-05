@@ -99,6 +99,7 @@ const fs = require('fs-extra');
 const net = require('net');
 const http = require('http');
 const request = require('request');
+const DATWatcher = require('./dat-watcher');
 app.commandLine.appendSwitch('disable-renderer-backgrounding');
 
 ipcMain.setMaxListeners(0);
@@ -266,8 +267,14 @@ function startMachina() {
       win.webContents.send('install-npcap-prompt', true);
     } else {
       Machina.start(win, config, options.verbose, options.pid);
+      DATWatcher.start(win);
     }
   });
+}
+
+function stopMachina() {
+  Machina.stop();
+  DATWatcher.stop();
 }
 
 function createWindow() {
@@ -367,7 +374,7 @@ function createWindow() {
       return false;
     }
     if (config.get('machina') === true) {
-      Machina.stop();
+      stopMachina();
     }
     config.set('overlays', openedOverlayUris);
     config.set('win:bounds', win.getBounds());
@@ -452,7 +459,7 @@ function applySettings(settings) {
       config.set('region', settings.region);
 
       if (config.get('machina') === true) {
-        Machina.stop();
+        stopMachina();
         startMachina();
       }
     }
@@ -602,7 +609,7 @@ ipcMain.on('toggle-machina', (event, enabled) => {
   if (enabled) {
     startMachina();
   } else {
-    Machina.stop();
+    stopMachina();
   }
 });
 
@@ -618,7 +625,7 @@ ipcMain.on('toggle-machina:get', (event) => {
 ipcMain.on('rawsock', (event, enabled) => {
   config.set('rawsock', enabled);
   event.sender.send('rawsock:value', enabled);
-  Machina.stop();
+  stopMachina();
   startMachina();
 });
 
@@ -820,7 +827,7 @@ ipcMain.on('winpcap:get', (event) => {
 
 ipcMain.on('winpcap:set', (event, flag) => {
   config.set('winpcap', flag);
-  Machina.stop();
+  stopMachina();
   startMachina();
 });
 

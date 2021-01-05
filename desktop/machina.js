@@ -1,7 +1,7 @@
 const MachinaFFXIV = require('node-machina-ffxiv');
 const isDev = require('electron-is-dev');
 const path = require('path');
-const { app, ipcMain } = require('electron');
+const { app } = require('electron');
 const log = require('electron-log');
 const isElevated = require('is-elevated');
 const { exec } = require('child_process');
