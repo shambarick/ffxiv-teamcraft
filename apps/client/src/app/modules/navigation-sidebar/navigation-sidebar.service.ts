@@ -312,6 +312,15 @@ export class NavigationSidebarService {
               link: '/retainer-ventures'
             },
             {
+              name: 'SUBMARINES.Title',
+              icon: {
+                type: SidebarIconType.ANTD,
+                content: 'carry-out'
+              },
+              link: '/submarines',
+              // hidden: !this.platformService.isDesktop()
+            },
+            {
               name: 'MACRO_TRANSLATION.Title',
               icon: {
                 type: SidebarIconType.ANTD,

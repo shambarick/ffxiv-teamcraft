@@ -47,6 +47,7 @@ export class PacketCapture {
     'resultDialog',
     'desynthResult',
     'logout',
+    'freeCompanyInfo',
     'airshipStatus',
     'airshipExplorationResult'
   ];

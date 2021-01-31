@@ -8,7 +8,7 @@ import { bufferCount, debounce, debounceTime, distinctUntilChanged, first, map, 
 import { ofPacketType } from '../rxjs/of-packet-type';
 import { Store } from '@ngrx/store';
 import * as pcap from '../../model/pcap';
-import { PlayerSpawn } from '../../model/pcap';
+import { FreeCompanyInfo, PlayerSpawn } from '../../model/pcap';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { TranslateService } from '@ngx-translate/core';
 import { RawsockAdminErrorPopupComponent } from '../../modules/ipc-popups/rawsock-admin-error-popup/rawsock-admin-error-popup.component';
@@ -54,6 +54,10 @@ export class IpcService {
     return this.packets$.pipe(ofPacketType<PlayerSpawn>('playerSpawn'), map(packet => packet.currentWorldId));
   }
 
+  public get freeCompanyId$(): Observable<number> {
+    return this.packets$.pipe(ofPacketType<FreeCompanyInfo>('freeCompanyInfo'), map(packet => packet.fcId));
+  }
+
   public get marketTaxRatePackets$(): Observable<pcap.MarketTaxRates> {
     return this.packets$.pipe(ofPacketSubType('marketTaxRates'));
   }
@@ -88,6 +92,10 @@ export class IpcService {
 
   public get retainerInformationPackets$(): Observable<pcap.RetainerInformation> {
     return this.packets$.pipe(ofPacketType('retainerInformation'));
+  }
+
+  public get submarinesStatusList$(): Observable<pcap.SubmarineStatusList> {
+    return this.packets$.pipe(ofPacketType('submarineStatusList'));
   }
 
   public get updatePositionHandlerPackets$(): Observable<pcap.UpdatePositionHandler> {

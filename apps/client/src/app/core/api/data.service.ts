@@ -96,6 +96,23 @@ export class DataService {
     return this.xivapi.search(searchOptions);
   }
 
+  public getFeeCompany(id: string | number, forcedLang?: string): any {
+    const lang = forcedLang || this.getSearchLang();
+
+    const searchOptions: XivapiSearchOptions = {
+      language: lang
+    };
+
+    if (this.settings.region === Region.China) {
+      searchOptions.baseUrl = this.baseUrl;
+    }
+
+    if (!['chs', 'zh'].includes(lang)) {
+      searchOptions.string_algo = SearchAlgo.WILDCARD_PLUS;
+    }
+    return this.xivapi.getFreeCompany(id, searchOptions);
+  }
+
   /**
    * Gets an item based on its id.
    * @param {number} id

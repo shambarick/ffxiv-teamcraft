@@ -10,6 +10,7 @@ export * from './DesynthResult';
 export * from './EffectResult';
 export * from './EventPlay4';
 export * from './EventPlay32';
+export * from './FreeCompanyInfo';
 export * from './FishingBaitMsg';
 export * from './InitZone';
 export * from './InventoryModifyHandler';
