@@ -1,6 +1,7 @@
 export class Submarine {
+  status: number;
   name: string;
-  freeCompanyId: number;
+  freecompanyId: number;
   rank: number;
   currentExperience: number;
   totalExperienceForNextRank: number;

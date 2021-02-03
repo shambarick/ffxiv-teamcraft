@@ -56,6 +56,7 @@ import { version } from '../environments/version';
 import { PlayerMetricsService } from './modules/player-metrics/player-metrics.service';
 import { PatreonService } from './core/patreon/patreon.service';
 import { UpdaterStatus } from './model/other/updater-status';
+import { SubmarinesFacade } from './modules/submarines/+state/submarines.facade';
 
 declare const gtag: Function;
 
@@ -154,7 +155,7 @@ export class AppComponent implements OnInit {
               private quickSearch: QuickSearchService, public mappy: MappyReporterService,
               apollo: Apollo, httpLink: HttpLink, private tutorialService: TutorialService,
               private playerMetricsService: PlayerMetricsService, private patreonService: PatreonService,
-              private cd: ChangeDetectorRef) {
+              private cd: ChangeDetectorRef, private submarinesService: SubmarinesFacade) {
 
     fromEvent(document, 'keypress').subscribe((event: KeyboardEvent) => {
       this.handleKeypressShortcuts(event);
@@ -221,6 +222,7 @@ export class AppComponent implements OnInit {
         this.universalis.initCapture();
       }
       this.inventoryService.load();
+      this.submarinesService.load();
 
       this.firebase.object<boolean>('maintenance')
         .valueChanges()

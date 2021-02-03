@@ -54,7 +54,7 @@ export class IpcService {
     return this.packets$.pipe(ofPacketType<PlayerSpawn>('playerSpawn'), map(packet => packet.currentWorldId));
   }
 
-  public get freeCompanyId$(): Observable<number> {
+  public get freecompanyId$(): Observable<number> {
     return this.packets$.pipe(ofPacketType<FreeCompanyInfo>('freeCompanyInfo'), map(packet => packet.fcId));
   }
 

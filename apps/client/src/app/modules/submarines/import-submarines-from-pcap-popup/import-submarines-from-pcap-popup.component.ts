@@ -6,10 +6,12 @@ import { IpcService } from '../../../core/electron/ipc.service';
 import { LazyDataService } from '../../../core/data/lazy-data.service';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { debounceBufferTime } from '../../../core/rxjs/debounce-buffer-time';
-import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { filter, finalize, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { TeamcraftGearset } from '../../../model/gearset/teamcraft-gearset';
 import { Memoized } from '../../../core/decorators/memoized';
 import { DataService } from '../../../core/api/data.service';
+import { FreecompanySubmarines } from '../model/freecompany-submarines';
+import { Submarine } from '../model/submarine';
 
 @Component({
   selector: 'app-import-submarines-from-pcap-popup',
@@ -17,53 +19,76 @@ import { DataService } from '../../../core/api/data.service';
   styleUrls: ['./import-submarines-from-pcap-popup.component.less'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ImportSubmarinesFromPcapPopupComponent extends TeamcraftComponent{
+export class ImportSubmarinesFromPcapPopupComponent extends TeamcraftComponent {
+  public freeCompany = new BehaviorSubject(null);
 
-  public updateMode = false;
+  public dataLoaded$ = new BehaviorSubject<boolean>(false);
+  public data$ = new BehaviorSubject(null);
 
-  public job: number;
-
-  public gearsetName: string;
-
-  public freeCompanyId$ = new BehaviorSubject(null);
-  public freeCompanyName$ = new BehaviorSubject('');
-  public freeCompanyServer$ = new BehaviorSubject('');
-  public freeCompanyEstatePlot$ = new BehaviorSubject('');
-  public freeCompanyRank$ = new BehaviorSubject('');
-  public statusList$ = new BehaviorSubject([]);
+  public isLoading$ = new BehaviorSubject<boolean>(false);
 
   constructor(private modalRef: NzModalRef, private ipc: IpcService,
               private dataService: DataService, private lazyData: LazyDataService) {
     super();
     combineLatest([
-      this.ipc.freeCompanyId$,
+      this.ipc.freecompanyId$,
       this.ipc.submarinesStatusList$
     ]).pipe(
-      switchMap(([freeCompanyId, submarineStatusList]) => {
-        const data = {};
-
-        this.freeCompanyId$.next(freeCompanyId);
-        this.statusList$.next(submarineStatusList.statusList);
-
-        console.log('teeeest');
-
-        console.log(`fcid: ${freeCompanyId}`);
-        console.log(freeCompanyId);
-        console.log(submarineStatusList);
-        return this.dataService.getFeeCompany(freeCompanyId)
+      switchMap(([freecompanyId, submarineStatusList]) => {
+        this.dataLoaded$.next(freecompanyId && submarineStatusList.statusList !== undefined);
+        this.isLoading$.next(true);
+        return this.dataService.getFeeCompany(freecompanyId)
           .pipe(
             map((result: any) => {
-            this.freeCompanyName$.next(result.FreeCompany.Name);
-            this.freeCompanyRank$.next(result.FreeCompany.Rank);
-            this.freeCompanyServer$.next(result.FreeCompany.Server);
-            this.freeCompanyEstatePlot$.next(result.FreeCompany.Estate?.Plot);
-            console.log(result);
-          }));
+              const freeCompany = {
+                id: freecompanyId,
+                name: result.FreeCompany.Name,
+                rank: result.FreeCompany.Rank,
+                server: result.FreeCompany.Server,
+                estatePlot: result.FreeCompany.Estate.Plot
+              };
+              const submarines: Submarine[] = submarineStatusList.statusList.map((submarine) => {
+                return {
+                  rank: submarine.rank,
+                  status: submarine.status,
+                  name: submarine.name,
+                  birthdate: new Date(submarine.birthdate * 1000),
+                  returnTime: new Date(submarine.returnTime * 1000),
+                  hullId: submarine.hull,
+                  sternId: submarine.stern,
+                  bowId: submarine.bow,
+                  bridgeId: submarine.bridge,
+                  capacity: submarine.capacity,
+                  currentExperience: submarine.currentExp,
+                  totalExperienceForNextRank: submarine.totalExpForNextRank,
+                  freecompanyId: freecompanyId,
+                  destinations: [
+                    submarine.dest1,
+                    submarine.dest2,
+                    submarine.dest3,
+                    submarine.dest4,
+                    submarine.dest5
+                  ].filter((dest) => dest > 0)
+                };
+              });
+              return {
+                freeCompany,
+                submarines
+              };
+            }),
+            finalize(() => this.hideLoading()));
       }),
-      takeUntil(this.onDestroy$),
-    ).subscribe(([freeCompanyId, submarineStatusList]) => {
-
-      // this.modalRef.close(data);
+      takeUntil(this.onDestroy$)
+    ).subscribe((data) => {
+      this.data$.next(data);
     });
+  }
+
+  save(): void {
+    this.modalRef.close(this.data$.getValue());
+  }
+
+  private hideLoading() {
+    this.isLoading$.next(false);
   }
 }

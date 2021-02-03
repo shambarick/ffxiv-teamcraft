@@ -1,5 +1,31 @@
 <div fxLayout="row" fxLayoutGap="5px">
   <div>
-    <button nz-button (click)="importFromPcap()">{{'GEARSETS.Import_using_pcap' | translate}}</button>
+    <button nz-button (click)="importFromPcap()">{{'SUBMARINES.Import_using_pcap' | translate}}</button>
   </div>
 </div>
+
+<ng-container *ngIf="display$ | async as display;">
+  <div nz-row *ngFor="let freeCompanyId of display | keys; let odd=odd" [class.odd]="odd" class="retainer-row">
+    <ng-container *ngFor="let slot of display[freeCompanyId] |keys">
+      <ng-container *ngIf="display[freeCompanyId][slot] as submarine">
+        <div nz-col nzMd="6" fxLayout="row" fxLayoutAlign="flex-start center">
+          {{submarine.name}}
+        </div>
+        <div nz-col nzMd="4" fxLayout="row" fxLayoutAlign="flex-start center">
+          {{submarine.status}}
+        </div>
+        <div nz-col nzMd="6" fxLayout="row" fxLayoutAlign="flex-start center">
+          {{submarine.rank}}
+        </div>
+        <div nz-col nzMd="8" fxLayout="row" fxLayoutAlign="flex-start center">
+          <ng-container *ngIf="submarine.status === 1; else taskCompleteDate">
+            <i nz-icon nzType="check-circle" nzTheme="outline" class="task-icon complete"></i> {{'RETAINERS.Task_complete' | translate}}
+          </ng-container>
+          <ng-template #taskCompleteDate>
+            <i nz-icon nzType="field-time" nzTheme="outline" class="task-icon"></i> {{submarine.returnTime}}
+          </ng-template>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</ng-container>

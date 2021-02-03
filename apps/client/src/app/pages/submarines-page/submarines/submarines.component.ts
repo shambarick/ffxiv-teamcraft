@@ -3,6 +3,8 @@ import { TeamcraftComponent } from '../../../core/component/teamcraft-component'
 import { IpcService } from '../../../core/electron/ipc.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { SubmarinesFacade } from '../../../modules/submarines/+state/submarines.facade';
+import { combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-submarines',
@@ -14,12 +16,16 @@ export class SubmarinesComponent extends TeamcraftComponent implements OnInit {
 
   private machinaToggle = false;
 
+  public display$ = this.submarinesFacade.submarines$.pipe(
+  );
+
   constructor(private dialog: NzModalService, private ipc: IpcService,
               private submarinesFacade: SubmarinesFacade) {
     super();
   }
 
   ngOnInit(): void {
+    this.submarinesFacade.load();
     this.ipc.once('toggle-machina:value', (event, value) => {
       this.machinaToggle = value;
     });

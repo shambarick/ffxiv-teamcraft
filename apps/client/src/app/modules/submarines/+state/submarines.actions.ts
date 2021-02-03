@@ -1,45 +1,40 @@
-import { Action } from '@ngrx/store';
+import { Action, createAction, props } from '@ngrx/store';
+import { FreecompanyWorkshop } from '../model/freecompany-workshop';
+import { FreecompanySubmarines } from '../model/freecompany-submarines';
+import { Submarine } from '../model/submarine';
+import { FreecompanyWorkshops } from '../model/freecompany-workshops';
 
-export enum SubmarinesActionTypes {
+export enum FreecompanyWorkshopActionTypes {
   LoadSubmarines = '[Submarines] Load Submarines',
   SubmarinesLoaded = '[Submarines] Submarines Loaded',
-  UpdateSubmarines = '[Submarines] Update Submarines',
-  ApplyFreeCompanyId = '[Submarines] Set FreeCompanyId',
+  UpdateSubmarines = '[Submarines] Update Freecompany Submarines',
+  SetWorkshop = '[Submarines] Set Workshop',
+  UpdateWorkshops = '[Submarines] Update Workshops',
+  ApplyFreecompanyId = '[Submarines] Set FreecompanyId',
   ImportFromPcap = '[Submarines] Import From Pcap',
 }
 
-export class LoadSubmarines implements Action {
-  readonly type = SubmarinesActionTypes.LoadSubmarines;
-}
+const PREFIX = '[FreecompanyWorkshop]';
 
-export class SubmarinesLoaded implements Action {
-  readonly type = SubmarinesActionTypes.SubmarinesLoaded;
+export const setWorkshop = createAction(
+  `${PREFIX} Set Workshop`,
+  props<{ workshop }>()
+);
 
-  constructor(public readonly payload: any) {
-  }
-}
+export const updateWorkshops = createAction(
+  `${PREFIX} Update Workshops`,
+  props<{ workshops: FreecompanyWorkshops }>()
+);
 
-export class UpdateSubmarines implements Action {
-  readonly type = SubmarinesActionTypes.UpdateSubmarines;
+export const loadWorkshops = createAction(
+  `${PREFIX} Load Workshops`
+);
 
-  constructor(public readonly payload: any) {
-  }
-}
+export const workshopLoaded = createAction(
+  `${PREFIX} Workshops Loaded`,
+  props<{ workshops: FreecompanyWorkshops }>()
+);
 
-export class ImportFromPcap implements Action {
-  readonly type = SubmarinesActionTypes.ImportFromPcap;
-}
-
-export class ApplyFreeCompanyId implements Action {
-  readonly type = SubmarinesActionTypes.ApplyFreeCompanyId;
-
-  constructor(public readonly freeCompanyId: string) {
-  }
-}
-
-export type SubmarinesAction =
-  | LoadSubmarines
-  | SubmarinesLoaded
-  | UpdateSubmarines
-  | ApplyFreeCompanyId
-  | ImportFromPcap
+export const importFromPcap = createAction(
+  `${PREFIX} Import from Pcap`
+);

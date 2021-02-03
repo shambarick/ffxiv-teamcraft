@@ -46,6 +46,7 @@ export class IpcListenersManager {
     this.setupToolingListeners();
     this.setupProxyManagerListeners();
     this.setupInventoryListeners();
+    this.setupFreecompanyWorkshopListeners();
   }
 
   private setupOauthListeners(): void {
@@ -367,6 +368,27 @@ export class IpcListenersManager {
           } catch (e) {
             event.sender.send('inventory:value', {});
           }
+        }
+      });
+    });
+
+
+  }
+
+  private setupFreecompanyWorkshopListeners(): void {
+    const submarinesPath = join(app.getPath('userData'), 'submarines.json');
+
+    ipcMain.on('freecompany-workshop:set', (event, submarines) => {
+      writeFileSync(submarinesPath, JSON.stringify(submarines));
+    });
+
+    ipcMain.on('freecompany-workshop:get', (event, submarines) => {
+      console.log('reading');
+      readFile(submarinesPath, 'utf8', (err, content) => {
+        if (err) {
+          event.sender.send('freecompany-workshop:value', {});
+        } else {
+          event.sender.send('freecompany-workshop:value', JSON.parse(content));
         }
       });
     });
