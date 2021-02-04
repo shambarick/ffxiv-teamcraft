@@ -71,10 +71,6 @@ export class SubmarinesEffects {
       console.log(workshop);
       return FreecompanyWorkshopActions.setWorkshop({workshop});
     }),
-    map((state) => {
-      console.log(state);
-      return FreecompanyWorkshopActions.saveToFile();
-    })
   );
 
   @Effect({ dispatch: false })

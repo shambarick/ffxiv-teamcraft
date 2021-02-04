@@ -54,39 +54,22 @@ export const initialState: FreecompanyWorkshopState = freecompanyWorkshopAdapter
 //   return state;
 // }
 
-// export const freecompanyWorkshopReducer = createReducer(
-//   initialState,
-//   on(FreecompanyWorkshopActions.workshopLoaded, (state, {workshops}) => {
-//     console.log('loaded');
-//     return freecompanyWorkshopAdapter.addMany(workshops, state);
-//   }),
-//   on(FreecompanyWorkshopActions.setWorkshop, (state, action) => {
-//     console.log('SET');
-//     console.log(action.workshop);
-//     return freecompanyWorkshopAdapter.addOne(action.workshop, state);
-//   }),
-// );
+export const freecompanyWorkshopReducer = createReducer(
+  initialState,
+  on(FreecompanyWorkshopActions.workshopLoaded, (state, {workshops}) => {
+    console.log('loaded');
+    return freecompanyWorkshopAdapter.addMany(workshops, state);
+  }),
+  on(FreecompanyWorkshopActions.setWorkshop, (state, action) => {
+    console.log('SET');
+    console.log(action.workshop);
+    return freecompanyWorkshopAdapter.addOne(action.workshop, state);
+  }),
+);
 
-// export function reducer(state: FreecompanyWorkshopState | undefined, action: Action) {
-//   console.log('lulz');
-//   console.log(state);
-//   console.log(action);
-//   return freecompanyWorkshopReducer(state, action);
-// }
-
-
-export function reducer(
-  state: FreecompanyWorkshopState = initialState,
-  action: any
-): FreecompanyWorkshopState {
-  switch (action.type) {
-    case FreecompanyWorkshopActions.setWorkshop.type: {
-      state = {
-        ...state,
-        entities: {[action.workshop.id]: action.workshop},
-      };
-      break;
-    }
-  }
-  return state;
+export function reducer(state: FreecompanyWorkshopState | undefined, action: Action) {
+  console.log('lulz');
+  console.log(state);
+  console.log(action);
+  return freecompanyWorkshopReducer(state, action);
 }
