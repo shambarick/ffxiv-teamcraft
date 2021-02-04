@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ImportSubmarinesFromPcapPopupComponent } from './import-submarines-from-pcap-popup/import-submarines-from-pcap-popup.component';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { FREECOMPANYWORKSHOP_FEATURE_KEY, initialState as submarinesInitialState, freecompanyWorkshopReducer } from './+state/freecompany-workshop.reducer';
+import { FREECOMPANYWORKSHOP_FEATURE_KEY, initialState as submarinesInitialState, reducer } from './+state/freecompany-workshop.reducer';
 import { SubmarinesEffects } from './+state/submarines.effects';
 import { AntdSharedModule } from '../../core/antd-shared.module';
 import { FormsModule } from '@angular/forms';
@@ -18,9 +18,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
   imports: [
     CommonModule,
     FormsModule,
-    StoreModule.forFeature(FREECOMPANYWORKSHOP_FEATURE_KEY, freecompanyWorkshopReducer, {
-      initialState: submarinesInitialState
-    }),
+    StoreModule.forFeature(FREECOMPANYWORKSHOP_FEATURE_KEY, reducer),
     EffectsModule.forFeature([SubmarinesEffects]),
     AntdSharedModule,
     FlexLayoutModule,

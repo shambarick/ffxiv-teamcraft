@@ -40,7 +40,7 @@ export class ImportSubmarinesFromPcapPopupComponent extends TeamcraftComponent {
         return this.dataService.getFeeCompany(freecompanyId)
           .pipe(
             map((result: any) => {
-              const freeCompany = {
+              const freecompany = {
                 id: freecompanyId,
                 name: result.FreeCompany.Name,
                 rank: result.FreeCompany.Rank,
@@ -72,7 +72,7 @@ export class ImportSubmarinesFromPcapPopupComponent extends TeamcraftComponent {
                 };
               });
               return {
-                freeCompany,
+                freecompany,
                 submarines
               };
             }),

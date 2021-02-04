@@ -1,20 +1,18 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { FREECOMPANYWORKSHOP_FEATURE_KEY, FreecompanyWorkshopState } from './freecompany-workshop.reducer';
+import { FREECOMPANYWORKSHOP_FEATURE_KEY, freecompanyWorkshopAdapter as adapter, FreecompanyWorkshopState } from './freecompany-workshop.reducer';
 
-const getFreecompanyWorkshopState = createFeatureSelector<FreecompanyWorkshopState>(
+export const selectFreecompanyWorkshopState = createFeatureSelector<FreecompanyWorkshopState>(
   FREECOMPANYWORKSHOP_FEATURE_KEY
 );
 
-const getLoaded = createSelector(
-  getFreecompanyWorkshopState,
-  (state: FreecompanyWorkshopState) => state.loaded
+const {
+  selectAll,
+  selectEntities,
+  selectIds,
+  selectTotal
+} = adapter.getSelectors();
+
+export const selectAllWorkshops = createSelector(
+  selectFreecompanyWorkshopState,
+  selectAll,
 );
-
-const getWorkshops = createSelector(
-  getFreecompanyWorkshopState,
-  (state) => {
-    return state.workshops;
-  }
-);
-
-

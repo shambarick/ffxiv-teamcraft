@@ -8,10 +8,10 @@
   </div>
 </nz-spin>
 <ng-template #fcData let-fc="fc">
-  Server: {{ fc?.freeCompany?.server }}<br>
-  FC: {{ fc?.freeCompany?.id }} - {{ fc?.freeCompany?.name }}<br>
-  Rank: {{ fc?.freeCompany?.rank }}<br>
-  Estate: {{ fc?.freeCompany?.estatePlot }}
+  Server: {{ fc?.freecompany?.server }}<br>
+  FC: {{ fc?.freecompany?.id }} - {{ fc?.freecompany?.name }}<br>
+  Rank: {{ fc?.freecompany?.rank }}<br>
+  Estate: {{ fc?.freecompany?.estatePlot }}
   <ul>
     <li *ngFor='let status of fc?.submarines'>{{ status.name }} - {{ status.rank }}</li>
   </ul>

@@ -1,94 +1,92 @@
 import * as FreecompanyWorkshopActions  from './submarines.actions';
-import { FreecompanyWorkshops } from '../model/freecompany-workshops';
 import { Action, createReducer, on } from '@ngrx/store';
-import * as MetricsDashboardsActions from '../../player-metrics/+state/metrics-dashboards.actions';
-import { metricsDashboardsAdapter, State } from '../../player-metrics/+state/metrics-dashboards.reducer';
+import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { FreecompanyWorkshop } from '../model/freecompany-workshop';
+import { InventoryAction, InventoryActionTypes } from '../../inventory/+state/inventory.actions';
+import { InventoryState } from '../../inventory/+state/inventory.reducer';
 
 export const FREECOMPANYWORKSHOP_FEATURE_KEY = 'freecompanyWorkshop';
 
-export interface FreecompanyWorkshopState {
-  workshops: FreecompanyWorkshops,
-  loaded: boolean;
+export interface FreecompanyWorkshopState extends EntityState<FreecompanyWorkshop> {
+
 }
-
-export interface FreecompanyWorkshopPartialState {
-  readonly [FREECOMPANYWORKSHOP_FEATURE_KEY]: FreecompanyWorkshopState;
+export function selectUserId(a: FreecompanyWorkshop): string {
+  //In this case this would be optional since primary key is id
+  return a.id;
 }
+export const freecompanyWorkshopAdapter: EntityAdapter<FreecompanyWorkshop> = createEntityAdapter<FreecompanyWorkshop>({
+  selectId: selectUserId
+});
 
-export const initialState: FreecompanyWorkshopState = {
-  workshops: null,
-  loaded: false
-};
+export const initialState: FreecompanyWorkshopState = freecompanyWorkshopAdapter.getInitialState();
 
-export function freecompanyWorkshopReducere=(
+// export function freecompanyWorkshopReducere=(
+//   state: FreecompanyWorkshopState = initialState,
+//   action: FreecompanyWorkshopAction
+// ): FreecompanyWorkshopState {
+//   switch (action.type) {
+//     case FreecompanyWorkshopActionTypes.SubmarinesLoaded: {
+//       state = {
+//         ...state,
+//         workshops: action.payload,
+//         loaded: true
+//       };
+//       break;
+//     }
+//     case FreecompanyWorkshopActionTypes.SetWorkshop: {
+//       state = {
+//         ...state,
+//         workshops: action.payload
+//       };
+//       break;
+//     }
+//     case FreecompanyWorkshopActionTypes.ApplyFreecompanyId: {
+//       state.workshops = state.workshops.clone();
+//       if (!this.submarines[action.freecompanyId] && action.freecompanyId) {
+//         this.submarines[action.freecompanyId] = {};
+//       }
+//       state = {
+//         ...state
+//       };
+//       break;
+//     }
+//   }
+//   return state;
+// }
+
+// export const freecompanyWorkshopReducer = createReducer(
+//   initialState,
+//   on(FreecompanyWorkshopActions.workshopLoaded, (state, {workshops}) => {
+//     console.log('loaded');
+//     return freecompanyWorkshopAdapter.addMany(workshops, state);
+//   }),
+//   on(FreecompanyWorkshopActions.setWorkshop, (state, action) => {
+//     console.log('SET');
+//     console.log(action.workshop);
+//     return freecompanyWorkshopAdapter.addOne(action.workshop, state);
+//   }),
+// );
+
+// export function reducer(state: FreecompanyWorkshopState | undefined, action: Action) {
+//   console.log('lulz');
+//   console.log(state);
+//   console.log(action);
+//   return freecompanyWorkshopReducer(state, action);
+// }
+
+
+export function reducer(
   state: FreecompanyWorkshopState = initialState,
-  action: FreecompanyWorkshopAction
+  action: any
 ): FreecompanyWorkshopState {
   switch (action.type) {
-    case FreecompanyWorkshopActionTypes.SubmarinesLoaded: {
+    case FreecompanyWorkshopActions.setWorkshop.type: {
       state = {
         ...state,
-        workshops: action.payload,
-        loaded: true
-      };
-      break;
-    }
-    case FreecompanyWorkshopActionTypes.SetWorkshop: {
-      state = {
-        ...state,
-        workshops: action.payload
-      };
-      break;
-    }
-    case FreecompanyWorkshopActionTypes.ApplyFreecompanyId: {
-      state.workshops = state.workshops.clone();
-      if (!this.submarines[action.freecompanyId] && action.freecompanyId) {
-        this.submarines[action.freecompanyId] = {};
-      }
-      state = {
-        ...state
+        entities: {[action.workshop.id]: action.workshop},
       };
       break;
     }
   }
   return state;
-}
-
-const freecompanyWorkshopReducer = createReducer(
-  initialState,
-  on(FreecompanyWorkshopActions.workshopLoaded, (state, {workshops}) => ({
-    ...state,
-    workshops,
-    loaded: true
-  })),
-  on(
-    FreecompanyWorkshopActions.setWorkshop,
-    (state, { workshop }) =>
-      metricsDashboardsAdapter.setAll(metricsDashboards, {
-        ...state,
-        loaded: true
-      })
-  ),
-  on(
-    MetricsDashboardsActions.selectMetricsDashboard,
-    (state, { id }) => {
-      return {
-        ...state,
-        selectedId: id
-      };
-    }
-  ),
-  on(
-    MetricsDashboardsActions.updateMetricsDashboard,
-    (state, { dashboard }) => {
-      return metricsDashboardsAdapter.setOne(dashboard, {
-        ...state,
-        loaded: true
-      });
-    }
-  )
-);
-
-export function reducer(state: State | undefined, action: Action) {
-  return freecompanyWorkshopReducer(state, action);
 }

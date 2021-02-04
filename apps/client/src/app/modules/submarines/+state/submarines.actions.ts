@@ -26,13 +26,17 @@ export const updateWorkshops = createAction(
   props<{ workshops: FreecompanyWorkshops }>()
 );
 
+export const saveToFile = createAction(
+  `${PREFIX} Save to file`,
+);
+
 export const loadWorkshops = createAction(
   `${PREFIX} Load Workshops`
 );
 
 export const workshopLoaded = createAction(
   `${PREFIX} Workshops Loaded`,
-  props<{ workshops: FreecompanyWorkshops }>()
+  props<{ workshops: FreecompanyWorkshop[] }>()
 );
 
 export const importFromPcap = createAction(
