@@ -373,4 +373,24 @@ export class IpcListenersManager {
 
 
   }
+
+  private setupFreecompanyWorkshopsListeners(): void {
+    const freecompanyWorkshopsPath = join(app.getPath('userData'), 'freecompany-workshops.json');
+
+    ipcMain.on('freecompany-workshops:set', (event, inventory) => {
+      writeFileSync(freecompanyWorkshopsPath, JSON.stringify(inventory));
+    });
+
+    ipcMain.on('freecompany-workshops:get', (event, inventory) => {
+      readFile(freecompanyWorkshopsPath, 'utf8', (err, content) => {
+        if (err) {
+          event.sender.send('freecompany-workshops:value', {});
+        } else {
+          event.sender.send('freecompany-workshops:value', JSON.parse(content));
+        }
+      });
+    });
+
+
+  }
 }

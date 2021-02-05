@@ -1,0 +1,18 @@
+<nz-spin [nzSpinning]="isLoading$ | async">
+  <div fxLayout='column' fxLayoutGap='10px'>
+    <div *ngIf="data$ | async">
+      <ng-container *ngTemplateOutlet="fcData;context:{fc: data$ | async}"></ng-container>
+    </div>
+    <nz-alert nzType='info' *ngIf='!(dataLoaded$ | async)' [nzMessage]="'SUBMARINES.Import_from_pcap_notice' | translate"></nz-alert>
+    <button *ngIf="(dataLoaded$ | async) && !(isLoading$ | async)" (click)="save()" nz-button nzType="primary">Save</button>
+  </div>
+</nz-spin>
+<ng-template #fcData let-fc="fc">
+  Server: {{ fc?.freecompany?.server }}<br>
+  FC: {{ fc?.freecompany?.id }} - {{ fc?.freecompany?.name }}<br>
+  Rank: {{ fc?.freecompany?.rank }}<br>
+  Estate: {{ fc?.freecompany?.estatePlot }}
+  <ul>
+    <li *ngFor='let status of fc?.submarines'>{{ status.name }} - {{ status.rank }}</li>
+  </ul>
+</ng-template>

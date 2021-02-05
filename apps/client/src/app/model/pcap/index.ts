@@ -11,6 +11,7 @@ export * from './EffectResult';
 export * from './EventPlay4';
 export * from './EventPlay32';
 export * from './FishingBaitMsg';
+export * from './FreecompanyInfo';
 export * from './InitZone';
 export * from './InventoryModifyHandler';
 export * from './InventoryTransaction';

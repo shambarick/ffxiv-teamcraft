@@ -54,6 +54,10 @@ export class IpcService {
     return this.packets$.pipe(ofPacketType<PlayerSpawn>('playerSpawn'), map(packet => packet.currentWorldId));
   }
 
+  public get freecompanyId$(): Observable<number> {
+    return this.packets$.pipe(ofPacketType<pcap.FreecompanyInfo>('freeCompanyInfo'), map(packet => packet.fcId));
+  }
+
   public get marketTaxRatePackets$(): Observable<pcap.MarketTaxRates> {
     return this.packets$.pipe(ofPacketSubType('marketTaxRates'));
   }
@@ -88,6 +92,10 @@ export class IpcService {
 
   public get retainerInformationPackets$(): Observable<pcap.RetainerInformation> {
     return this.packets$.pipe(ofPacketType('retainerInformation'));
+  }
+
+  public get submarinesStatusList$(): Observable<pcap.SubmarineStatusList> {
+    return this.packets$.pipe(ofPacketType('submarineStatusList'));
   }
 
   public get updatePositionHandlerPackets$(): Observable<pcap.UpdatePositionHandler> {
