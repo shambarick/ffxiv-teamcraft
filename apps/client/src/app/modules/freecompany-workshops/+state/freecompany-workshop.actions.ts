@@ -1,10 +1,14 @@
 import { createAction, props } from '@ngrx/store';
 import { Update } from '@ngrx/entity';
 
-import { FreecompanyWorkshop } from './freecompany-workshop.model';
+import { FreecompanyWorkshop } from '../model/freecompany-workshop';
 
 export const readFromFile = createAction(
   '[FreecompanyWorkshop/API] Read from file',
+);
+
+export const saveToFile = createAction(
+  '[FreecompanyWorkshop/API] Save to file',
 );
 
 export const importFromPcap = createAction(

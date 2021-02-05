@@ -5,6 +5,11 @@ import * as fromFreecompanyWorkshop from './+state/freecompany-workshop.reducer'
 import { EffectsModule } from '@ngrx/effects';
 import { FreecompanyWorkshopEffects } from './+state/freecompany-workshop.effects';
 import { ImportWorkshopFromPcapPopupComponent } from './import-workshop-from-pcap-popup/import-workshop-from-pcap-popup.component';
+import { XivapiClientModule } from '@xivapi/angular-client';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { AntdSharedModule } from '../../core/antd-shared.module';
+import { PipesModule } from '../../pipes/pipes.module';
+import { CoreModule } from '../../core/core.module';
 
 
 @NgModule({
@@ -12,7 +17,13 @@ import { ImportWorkshopFromPcapPopupComponent } from './import-workshop-from-pca
   imports: [
     CommonModule,
     StoreModule.forFeature(fromFreecompanyWorkshop.freecompanyWorkshopsFeatureKey, fromFreecompanyWorkshop.reducer),
-    EffectsModule.forFeature([FreecompanyWorkshopEffects])
+    EffectsModule.forFeature([FreecompanyWorkshopEffects]),
+
+    XivapiClientModule,
+
+    FlexLayoutModule,
+    AntdSharedModule,
+    CoreModule,
   ]
 })
 export class FreecompanyWorkshopsModule {

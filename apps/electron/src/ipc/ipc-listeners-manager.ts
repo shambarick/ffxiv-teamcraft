@@ -46,6 +46,7 @@ export class IpcListenersManager {
     this.setupToolingListeners();
     this.setupProxyManagerListeners();
     this.setupInventoryListeners();
+    this.setupFreecompanyWorkshopsListeners();
   }
 
   private setupOauthListeners(): void {

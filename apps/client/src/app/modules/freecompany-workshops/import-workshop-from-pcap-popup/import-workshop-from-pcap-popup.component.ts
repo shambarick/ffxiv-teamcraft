@@ -7,6 +7,7 @@ import { LazyDataService } from '../../../core/data/lazy-data.service';
 import { finalize, map, switchMap, takeUntil } from 'rxjs/operators';
 import { DataService } from '../../../core/api/data.service';
 import { Submarine } from '../model/submarine';
+import { XivapiService } from '@xivapi/angular-client';
 
 @Component({
   selector: 'app-import-workshop-from-pcap-popup',
@@ -30,7 +31,7 @@ export class ImportWorkshopFromPcapPopupComponent extends TeamcraftComponent imp
       switchMap(([freecompanyId, submarineStatusList]) => {
         this.dataLoaded$.next(freecompanyId && submarineStatusList.statusList !== undefined);
         this.isLoading$.next(true);
-        return this.dataService.getFeeCompany(freecompanyId)
+        return this.xivapiService.getFreeCompany(freecompanyId)
           .pipe(
             map((result: any) => {
               const freecompany = {
@@ -78,7 +79,7 @@ export class ImportWorkshopFromPcapPopupComponent extends TeamcraftComponent imp
   }
 
   constructor(private modalRef: NzModalRef, private ipc: IpcService,
-              private dataService: DataService, private lazyData: LazyDataService) {
+              private xivapiService: XivapiService, private lazyData: LazyDataService) {
     super();
   }
 
