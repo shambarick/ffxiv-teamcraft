@@ -2501,6 +2501,9 @@
   },
   "VOYAGE_TRACKER": {
     "Title": "Voyage tracker",
-    "Import_using_pcap": "Import using packet capture"
+    "Import_using_pcap": "Import using packet capture",
+    "Voyage_complete": "Voyage complete",
+    "No_airship": "No airship",
+    "No_submersible": "No submersible"
   }
 }

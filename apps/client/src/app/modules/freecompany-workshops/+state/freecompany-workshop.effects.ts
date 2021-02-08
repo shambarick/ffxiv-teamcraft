@@ -1,17 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import * as FreecompanyWorkshopActions from './freecompany-workshop.actions';
-import { filter, map, switchMap } from 'rxjs/operators';
+import * as FreecompanyWorkshopSelectors from './freecompany-workshop.selectors';
+import { concatMap, filter, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { Submarine } from '../model/submarine';
 import { FreecompanyWorkshop } from '../model/freecompany-workshop';
 import { ImportWorkshopFromPcapPopupComponent } from '../import-workshop-from-pcap-popup/import-workshop-from-pcap-popup.component';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { TranslateService } from '@ngx-translate/core';
-import { EMPTY, Subject } from 'rxjs';
+import { EMPTY, of, Subject } from 'rxjs';
 import { IpcService } from '../../../core/electron/ipc.service';
-import { FreecompanyWorkshops } from '../model/FreecompanyWorkshops';
+import { FreecompanyWorkshops } from '../model/freecompany-workshops';
 import { NgSerializerService } from '@kaiu/ng-serializer';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
+import { Airship } from '../model/airship';
 
 @Injectable()
 export class FreecompanyWorkshopEffects {
@@ -21,13 +23,12 @@ export class FreecompanyWorkshopEffects {
     switchMap(() => {
       console.log('loading');
       const result$ = new Subject<FreecompanyWorkshop[]>();
-      this.ipc.once('freecompany-workshop:value', (e, workshops) => {
-        console.log(workshops);
+      this.ipc.once('freecompany-workshops:value', (e, workshops) => {
         const data = this.serializer.deserialize<FreecompanyWorkshops>(workshops, FreecompanyWorkshops);
         result$.next(data.freecompanyWorkshops);
       });
       setTimeout(() => {
-        this.ipc.send('freecompany-workshop:get');
+        this.ipc.send('freecompany-workshops:get');
       }, 200);
       return result$;
     }),
@@ -36,8 +37,12 @@ export class FreecompanyWorkshopEffects {
 
   saveToFile$ = createEffect(() => this.actions$.pipe(
     ofType(FreecompanyWorkshopActions.saveToFile),
-    switchMap(() => {
-      console.log('lol');
+    concatMap((action) => of(action).pipe(
+      withLatestFrom(this.store.pipe(select(FreecompanyWorkshopSelectors.selectWorkshops)))
+    )),
+    switchMap(([action, state]) => {
+      const savePayload = JSON.parse(JSON.stringify({freecompanyWorkshops: state}));
+      this.ipc.send('freecompany-workshops:set', savePayload);
       return EMPTY;
     })
   ), {dispatch: false});
@@ -51,11 +56,16 @@ export class FreecompanyWorkshopEffects {
           nzTitle: this.translate.instant('FREECOMPANY_WORKSHOPS.Import_using_pcap')
         }).afterClose.pipe(
           filter(opts => opts),
-          map((data: { freecompany: any, submarines: Submarine[] }): FreecompanyWorkshop => {
+          map((data: { freecompany: any, submarines: Submarine[], airships: Airship[] }): FreecompanyWorkshop => {
             return {
               id: data.freecompany.id,
               name: data.freecompany.name,
               world: data.freecompany.server,
+              tag: data.freecompany.tag,
+              airships: {
+                sectors: {},
+                slots: [...data.airships]
+              },
               submarines: {
                 sectors: {},
                 slots: [...data.submarines]

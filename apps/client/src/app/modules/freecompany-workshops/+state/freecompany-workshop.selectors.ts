@@ -11,3 +11,7 @@ export const selectWorkshops = createSelector(
   getFreecompanyWorkshopState,
   fromFreecompanyWorkshop.selectAll,
 );
+export const selectAllWorkshopsEntities = createSelector(
+  getFreecompanyWorkshopState,
+  fromFreecompanyWorkshop.selectEntities,
+);

@@ -50,6 +50,8 @@ export class PacketCapture {
     'airshipStatus',
     'airshipExplorationResult',
     'freeCompanyInfo',
+    'airshipStatusList',
+    'eventPlay8'
   ];
 
   private static readonly PACKETS_FROM_OTHERS = [

@@ -94,8 +94,16 @@ export class IpcService {
     return this.packets$.pipe(ofPacketType('retainerInformation'));
   }
 
-  public get submarinesStatusList$(): Observable<pcap.SubmarineStatusList> {
+  public get submarinesStatusListPackets$(): Observable<pcap.SubmarineStatusList> {
     return this.packets$.pipe(ofPacketType('submarineStatusList'));
+  }
+
+  public get airshipStatusPackets$(): Observable<pcap.AirshipStatus> {
+    return this.packets$.pipe(ofPacketType('airshipStatus'));
+  }
+
+  public get airshipStatusListPackets$(): Observable<pcap.AirshipStatusList> {
+    return this.packets$.pipe(ofPacketType('airshipStatusList'));
   }
 
   public get updatePositionHandlerPackets$(): Observable<pcap.UpdatePositionHandler> {
@@ -128,6 +136,10 @@ export class IpcService {
 
   public get eventPlay4Packets$(): Observable<pcap.EventPlay4> {
     return this.packets$.pipe(ofPacketType('eventPlay4'));
+  }
+
+  public get eventPlay8Packets$(): Observable<pcap.EventPlay8> {
+    return this.packets$.pipe(ofPacketType('eventPlay8'));
   }
 
   public get eventPlay32Packets$(): Observable<pcap.EventPlay32> {
